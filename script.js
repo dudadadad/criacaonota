@@ -1,27 +1,23 @@
-//principais objetos
+const addNote = document.querySelector("#add-note"); 
+const closeModal = document.querySelector('#close-modal'); 
+const modal = document.querySelector('#modal'); 
+const modalView = document.querySelector('#modal-view'); 
+const notes = document.querySelector('#notes');
+const btnSaveNote = document.querySelector("#btn-save-note"); 
+const btnCloseNote = document.querySelector("#btn-close-note");
+const divControls = document.querySelector("#controls-note");
 
-const addNote = document.querySelector("#add-note"); //tipo o getElementById só que não apenas pra ID
-const closeModal =  document.querySelector('#close-modal'); //fechar janela modal com os detalhes da nota.
-const modal = document.querySelector('#modal'); //Modal para edição das notas
-const modalView = document.querySelector('#modal-view'); //Modal para exibição dos detalhes da nota
-const notes = document.querySelector('#notes');//Lista divs com dados das notas
-const btnSaveNote = document.querySelector("#btn-save-note"); //icone para salvar nota
-const btnCloseNote = document.querySelector("#btn-close-note");//icone para fechar modal de edição de nota.
-const divControls = document.querySelector("#controls-note");//editar e excluir notas
-
-//eventos
-
-addNote.addEventListener("click", (evt) =>
+addNote.addEventListener("click", (event) =>
 {
-    evt.preventDefault();
+    event.preventDefault();
     modal.style.display = "block";
     notes.style.display = "none";
     addNote.style.display = "none";
 });
 
-closeModal.addEventListener("click",(evt) =>
+closeModal.addEventListener("click",(event) =>
 {
-    evt.preventDefault();
+    event.preventDefault();
     modalView.style.display = "none";
     notes.style.display = "flex";
     addNote.style.display = "block";
@@ -30,9 +26,9 @@ closeModal.addEventListener("click",(evt) =>
     document.querySelector('#content-note').innerText = '';
 })
 
-btnCloseNote.addEventListener("click", (evt) =>
+btnCloseNote.addEventListener("click", (event) =>
 {
-    evt.preventDefault();
+    event.preventDefault();
     modal.style.display = "none";
     notes.style.display = "flex";
     addNote.style.display = "block";
@@ -44,12 +40,11 @@ btnCloseNote.addEventListener("click", (evt) =>
     listNotes(); 
 });
 
-btnSaveNote.addEventListener("click", (evt)=>
+btnSaveNote.addEventListener("click", (event)=>
 {
-    evt.preventDefault();
+    event.preventDefault();
 
-    let data =
-    {
+    let data = {
         id: document.querySelector("#input-id").value,
         title: document.querySelector("#input-title").value,
         content: document.querySelector("#input-content").value,
@@ -59,22 +54,16 @@ btnSaveNote.addEventListener("click", (evt)=>
     saveNote(data);
 });
 
-//funcoes
-
 const saveNote = (data) =>
 {
 
     let notes = loadNotes();
 
-    if (data.id.length < 1)
-    {
+    if (data.id.length < 1) {
         data.id = new Date().getTime();
         document.querySelector("#input-id").value = data.id;
         notes.push(data); 
-    }
-    
-    else
-    {
+    } else {
         console.log(data.id);
         notes.forEach((item, i) =>
         {
@@ -102,9 +91,9 @@ const listNotes = () =>
         divCard.className = 'card';
         divCard.style.width = '25rem';
 
-        divCard.addEventListener('click', (evt) =>
+        divCard.addEventListener('click', (event) =>
         {
-            evt.preventDefault();
+            event.preventDefault();
             showNote(item)
         });
 
@@ -115,7 +104,7 @@ const listNotes = () =>
         h1.innerText = item.title;
 
         divCardBody.appendChild(h1);
-        divCard.appendChild(divCardBody); //bota uma elemento/div dentro do outro
+        divCard.appendChild(divCardBody); 
 
         notes.appendChild(divCard);
 
@@ -125,24 +114,22 @@ const listNotes = () =>
         divCardBody.appendChild(p);
 
         let pLastTime = document.createElement('p');
-        pLastTime.innerText = "Ultima edição: " + new Date(item.lastTime).toLocaleDateString('pt-br');
+        pLastTime.innerText = "última edição em: " + new Date(item.lastTime).toLocaleDateString('pt-br');
 
         divCardBody.appendChild(pLastTime);
     });
 };
 
 const loadNotes = () =>
-{ //le local storage
+{ 
     let notes = localStorage.getItem('notes');
-    if (!notes)
-    {
+    if (!notes) {
         notes = [];
     }
-
-    else
-    {
-        notes = JSON.parse(notes); //transforma em objeto JSON
+    else {
+        notes = JSON.parse(notes); 
     }
+
     return notes;
 };
 
@@ -161,7 +148,7 @@ const showNote = (item) =>
     document.querySelector('#content-note').appendChild(pContent);
 
     let pLastTime = document.createElement('p');
-    pLastTime.innerText = "Última alteração: " + new Date(item.lastTime).toLocaleDateString('pt-br');
+    pLastTime.innerText = "última alteração em: " + new Date(item.lastTime).toLocaleDateString('pt-br');
     document.querySelector('#content-note').appendChild(pLastTime);
 
     divControls.innerHTML = '';
@@ -170,7 +157,7 @@ const showNote = (item) =>
     linkEdit = document.createElement('a');
     linkEdit.setAttribute("id", item.id);
     iconEdit = document.createElement('i');
-    iconEdit.className = "bi bi-pen";
+    iconEdit.className = "bi bi-pencil-square";
     iconEdit.style.color = "#001969";
     linkEdit.appendChild(iconEdit);
     divEdit.appendChild(linkEdit);
@@ -187,16 +174,18 @@ const showNote = (item) =>
     divControls.appendChild(divDel);
 
 
-    linkDel.addEventListener("click", (evt) => {
-        evt.preventDefault();
-        if (confirm("Confirmar?"))
+    linkDel.addEventListener("click", (event) =>
+    {
+        event.preventDefault();
+        if (confirm("confirmar?"))
         {
             deleteNote (item.id);
         }
     });
 
-    linkEdit.addEventListener("click", (evt) => {
-        evt.preventDefault();
+    linkEdit.addEventListener("click", (event) =>
+    {
+        event.preventDefault();
         modal.style.display = "block"; 
         notes.style.display = "none";
         addNote.style.display = "none";
@@ -223,11 +212,18 @@ const editNote = (id) =>
     let notes = loadNotes();
     const noteToEdit = notes.find(note => note.id === id);
 
-    if (noteToEdit) {
+    if (noteToEdit)
+    {
         document.querySelector("#input-id").value = noteToEdit.id;
         document.querySelector("#input-title").value = noteToEdit.title;
+
+        document.querySelector("#input-content").value = '';
+
         document.querySelector("#input-content").value = noteToEdit.content;
-    } else {
+    }
+    
+    else
+    {
         console.log("nota não encontrada");
     }
 };
