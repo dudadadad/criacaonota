@@ -59,7 +59,8 @@ const saveNote = (data) =>
 
     let notes = loadNotes();
 
-    if (data.id.length < 1) {
+    if (data.id.length < 1)
+    {
         data.id = new Date().getTime();
         document.querySelector("#input-id").value = data.id;
         notes.push(data); 
@@ -136,7 +137,6 @@ const loadNotes = () =>
         notes = JSON.parse(notes); 
         
     }
-
     return notes;
 };
 
